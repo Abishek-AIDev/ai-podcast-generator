@@ -1,0 +1,8 @@
+{
+  "name": "PastelPod",
+  "description": "A minimal, soft-pastel podcast interface for turning topics into audio episodes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

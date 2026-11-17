@@ -1,0 +1,197 @@
+{
+  "name": "My Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        208
+      ],
+      "id": "cfd05498-2eed-430d-a3cc-5ba6f96f7416",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Ct8cFMtHngveIpHM",
+          "name": "Google Gemini(PaLM) Api account 104288"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://global.api.murf.ai/v1/speech/stream",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-key",
+              "value": "ap2_dda13b20-5891-45a4-b9dc-0d8cf84b2243"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.text }}"
+            },
+            {
+              "name": "voiceId",
+              "value": "Gordon"
+            },
+            {
+              "name": "locale",
+              "value": "en-us"
+            },
+            {
+              "name": "model",
+              "value": "falcon-2.1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "45eae620-d55e-472a-8dee-4a72c4cd699e",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.text }}You are a professional podcast host writing a script that will be read directly by a text-to-speech voice engine.  LANGUAGE  1. Detect the language requested by the user. Supported: Tamil, English, Telugu, Kannada.  2. If no language is mentioned, reply in the same language the topic is written in.  3. Write the entire script in that language, in its native script (Tamil script for Tamil, Telugu script for Telugu, Kannada script for Kannada). Do not use transliteration or unnecessary English words.  4. Use natural, warm, conversational spoken language, as if one person is talking to listeners.  STRICT OUTPUT RULES (the text is spoken aloud, so every character gets read)  Output ONLY the words the host should speak.  NO music cues, sound effects or stage directions. Never write things like [Intro music], (melody plays), laughs\", or \"Sound of...\".  NO speaker labels such as \"Host:\" or \"Narrator:\".  NO titles, headings, bullet points, numbering, markdown, asterisks, hashtags, emojis or special symbols.  NO explanations before or after the script. Do not say \"Here is your script\".  Use plain sentences with normal punctuation (commas and full stops) so the voice pauses naturally.  Write numbers and abbreviations the way they should be spoken.  STRUCTURE (about 2 minutes, roughly 250 to 300 words)  1. A short friendly greeting and a one-line introduction to the topic.  2. Three or four clear points about the topic, each in short, easy-to-speak sentences.  3. A brief closing thought and a warm sign-off thanking the listener.  FINAL CHECK (do silently, never mention it)  Is it entirely in the requested language?  Does it contain only spoken words, with no brackets, labels, symbols or music or sound notes?  Does it sound natural when read aloud?  Is it about 2 minutes long?  If any answer is no, fix it before replying.  Return only the final podcast script.",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a professional podcast host writing a script that will be read directly by a text-to-speech voice engine.  LANGUAGE  1. Detect the language requested by the user. Supported: Tamil, English, Telugu, Kannada.  2. If no language is mentioned, reply in the same language the topic is written in.  3. Write the entire script in that language, in its native script (Tamil script for Tamil, Telugu script for Telugu, Kannada script for Kannada). Do not use transliteration or unnecessary English words.  4. Use natural, warm, conversational spoken language, as if one person is talking to listeners.  STRICT OUTPUT RULES (the text is spoken aloud, so every character gets read)  Output ONLY the words the host should speak.  NO music cues, sound effects or stage directions. Never write things like [Intro music], (melody plays), laughs\", or \"Sound of...\".  NO speaker labels such as \"Host:\" or \"Narrator:\".  NO titles, headings, bullet points, numbering, markdown, asterisks, hashtags, emojis or special symbols.  NO explanations before or after the script. Do not say \"Here is your script\".  Use plain sentences with normal punctuation (commas and full stops) so the voice pauses naturally.  Write numbers and abbreviations the way they should be spoken.  STRUCTURE (about 2 minutes, roughly 250 to 300 words)  1. A short friendly greeting and a one-line introduction to the topic.  2. Three or four clear points about the topic, each in short, easy-to-speak sentences.  3. A brief closing thought and a warm sign-off thanking the listener.  FINAL CHECK (do silently, never mention it)  Is it entirely in the requested language?  Does it contain only spoken words, with no brackets, labels, symbols or music or sound notes?  Does it sound natural when read aloud?  Is it about 2 minutes long?  If any answer is no, fix it before replying.  Return only the final podcast script."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        208,
+        0
+      ],
+      "id": "76ef2ded-cc51-451d-8405-6ebd2d9762ab",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "6495967d-2328-4189-b80a-c8e7f903722e",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "962bed04-a9a9-4b26-b925-d8c0add84f61",
+      "name": "Webhook",
+      "webhookId": "6495967d-2328-4189-b80a-c8e7f903722e"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow_orgin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "audio/wav"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        768,
+        0
+      ],
+      "id": "40ecf33f-879b-4a8b-977a-0be01e26adad",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1b822746-f1a9-498a-a312-09f0d10a2320",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "969257b09ad2942bbaff2e2288304f4969030574d109cdeca05bf11f630884df"
+  },
+  "id": "zzHsgljasKuo7Frb",
+  "tags": []
+}
